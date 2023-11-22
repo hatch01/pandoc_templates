@@ -41,7 +41,6 @@
 %%
 
 % Options for packages loaded elsewhere
-\usepackage{cancel}
 \PassOptionsToPackage{unicode$for(hyperrefoptions)$,$hyperrefoptions$$endfor$}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames*,x11names*,table}{xcolor}
@@ -80,6 +79,7 @@ $for(classoption)$
 $endfor$
   ,captions=tableheading
 ]{$if(beamer)$$documentclass$$else$$if(book)$scrbook$else$scrartcl$endif$$endif$}
+\usepackage{cancel}
 $if(beamer)$
 $if(background-image)$
 \usebackgroundtemplate{%
