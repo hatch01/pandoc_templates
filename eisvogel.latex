@@ -225,7 +225,6 @@ $endif$
 
 $if(linestretch)$
 \usepackage{setspace}
-\usepackage{cancel}
 $else$
 % Use setspace anyway because we change the default line spacing.
 % The spacing is changed early to affect the titlepage and the TOC.
@@ -250,23 +249,42 @@ $else$
 \makeatother
 $endif$
 $if(beamer)$
-\geometry{$for(geometry)$$geometry$$sep$,$endfor$}
 $else$
-\usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
+$if(block-headings)$
+% Make \paragraph and \subparagraph free-standing
+\makeatletter
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\makeatother
 $endif$
-$else$
-$if(beamer)$
-$else$
-\usepackage[margin=2.5cm,includehead=true,includefoot=true,centering,$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
 $endif$
+
+$--
+$-- verbatim in notes
+$--
+$if(verbatim-in-note)$
+\usepackage{fancyvrb}
 $endif$
-$if(titlepage-logo)$
-\usepackage[export]{adjustbox}
-\usepackage{graphicx}
-$endif$
-$if(beamer)$
-\newif\ifbibliography
-$endif$
+
+$-- highlighting
 $if(listings)$
 \usepackage{listings}
 \newcommand{\passthrough}[1]{#1}
@@ -529,6 +547,7 @@ $endif$
 \definecolor{default-filecolor}{HTML}{A50000}
 \definecolor{default-citecolor}{HTML}{4077C0}
 \definecolor{default-urlcolor}{HTML}{4077C0}
+
 \hypersetup{
 $if(title-meta)$
   pdftitle={$title-meta$},
@@ -1038,4 +1057,3 @@ $include-after$
 
 $endfor$
 \end{document}
-
